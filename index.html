@@ -4,9 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tic Tac Toe</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    
+    <div class="container">
+        <header class="header">
+            <h1>TIC TAC TOE</h1>
+        </header>
+        <div class="gameBoard">
+
+            <aside class="aside">
+                <input type="text" value="Player1">
+                <div class="container-mark">
+                    <img src="x.png" alt="x">
+                </div>
+                <h3 class="score">Score</h3>
+                <span>0</span>
+            </aside>
+
+
+            <main class="main">
+            <h3>Mode game:</h3>
+            <div class="mode-actually">
+                <p>Player vs player</p>
+            </div>
+
+            <div class="select-mode">
+                <div class="mode">
+                    <p>Two Players</p>
+                </div>
+                <div class="mode">
+                    <p>IA BOT</p>
+                </div>
+            </div>
+
+            <div id="table">
+                <div class="index" data-index="0"></div>
+                <div class="index" data-index="1"></div>
+                <div class="index" data-index="2"></div>
+                <div class="index" data-index="3"></div>
+                <div class="index" data-index="4"></div>
+                <div class="index" data-index="5"></div>
+                <div class="index" data-index="6"></div>
+                <div class="index" data-index="7"></div>
+                <div class="index" data-index="8"></div>
+            </div>
+
+            </main>
+            <aside class="aside">
+                <input type="text" value="Player2">
+                <div class="container-mark">
+                    <img src="o.png" alt="x">
+                </div>
+                <h3 class="score">Score</h3>
+                <span>0</span>
+            </aside>
+        </div>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>
