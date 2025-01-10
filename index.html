@@ -5,62 +5,85 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tic Tac Toe</title>
     <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Modak&family=Rubik+Vinyl&display=swap" rel="stylesheet">
+
 </head>
 <body>
-    <div class="container">
+   
         <header class="header">
             <h1>TIC TAC TOE</h1>
         </header>
         <div class="gameBoard">
 
             <aside class="aside">
-                <input type="text" value="Player1">
+                <input type="text" value="Player 1" id="player1">
                 <div class="container-mark">
                     <img src="x.png" alt="x">
                 </div>
                 <h3 class="score">Score</h3>
-                <span>0</span>
+                <span class="score-spanX">0</span>
             </aside>
 
 
             <main class="main">
-            <h3>Mode game:</h3>
-            <div class="mode-actually">
-                <p>Player vs player</p>
-            </div>
-
+            <h3 class="comments">Mode game:<span class="span-mark"></span></h3>
             <div class="select-mode">
-                <div class="mode">
+                <div data-mode="TwoPlayers" class="mode active">
                     <p>Two Players</p>
                 </div>
-                <div class="mode">
+                <div data-mode="Bot" class="mode">
                     <p>IA BOT</p>
                 </div>
             </div>
 
             <div id="table">
-                <div class="index" data-index="0"></div>
-                <div class="index" data-index="1"></div>
-                <div class="index" data-index="2"></div>
-                <div class="index" data-index="3"></div>
-                <div class="index" data-index="4"></div>
-                <div class="index" data-index="5"></div>
-                <div class="index" data-index="6"></div>
-                <div class="index" data-index="7"></div>
-                <div class="index" data-index="8"></div>
+                <div class="index" data-index="0">
+                    <img src="x.png" alt="check index" class="img-index index0">
+                </div>
+                <div class="index" data-index="1">
+                    <img src="x.png" alt="check index" class="img-index index1">
+                </div>
+                <div class="index" data-index="2">
+                    <img src="x.png" alt="check index" class="img-index index2">
+                </div>
+                <div class="index" data-index="3">
+                    <img src="x.png" alt="check index" class="img-index index3">
+                </div>
+                <div class="index" data-index="4">
+                    <img src="x.png" alt="check index" class="img-index index4">
+                </div>
+                <div class="index" data-index="5">
+                    <img src="x.png" alt="check index" class="img-index index5">
+                </div>
+                <div class="index" data-index="6">
+                    <img src="x.png" alt="check index" class="img-index index6">
+                </div>
+                <div class="index" data-index="7">
+                    <img src="x.png" alt="check index" class="img-index index7">
+                </div>
+                <div class="index" data-index="8">
+                    <img src="x.png" alt="check index" class="img-index index8">
+                </div>
             </div>
-
+            <div class="displayGame">
+                <div id="startGame">Start Game</div>
+                <div id="reset">
+                    <img src="reset.png" alt="reset">
+                </div>
+            </div>
             </main>
             <aside class="aside">
-                <input type="text" value="Player2">
+                <input type="text" value="Player 2" id="player2">
                 <div class="container-mark">
                     <img src="o.png" alt="x">
                 </div>
                 <h3 class="score">Score</h3>
-                <span>0</span>
+                <span class="score-spanO">0</span>
             </aside>
         </div>
-    </div>
     <script src="script.js"></script>
 </body>
 </html>
