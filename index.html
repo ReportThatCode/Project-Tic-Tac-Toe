@@ -21,7 +21,7 @@
             <aside class="aside">
                 <input type="text" value="Player 1" id="player1">
                 <div class="container-mark">
-                    <img src="x.png" alt="x">
+                    <img src="x.png" alt="mark" class="player1-img-mark">
                 </div>
                 <h3 class="score">Score</h3>
                 <span class="score-spanX">0</span>
@@ -31,45 +31,45 @@
             <main class="main">
             <h3 class="comments">Mode game:<span class="span-mark"></span></h3>
             <div class="select-mode">
-                <div data-mode="TwoPlayers" class="mode active">
+                <div data-mode="TwoPlayers" class="mode-player mode" >
                     <p>Two Players</p>
                 </div>
-                <div data-mode="Bot" class="mode">
+                <div data-mode="Bot" class="mode-bot mode ">
                     <p>IA BOT</p>
                 </div>
             </div>
 
             <div id="table">
-                <div class="index" data-index="0">
+                <div class="index index0" data-index="0">
                     <img src="x.png" alt="check index" class="img-index index0">
                 </div>
-                <div class="index" data-index="1">
+                <div class="index index1" data-index="1">
                     <img src="x.png" alt="check index" class="img-index index1">
                 </div>
-                <div class="index" data-index="2">
+                <div class="index index2" data-index="2">
                     <img src="x.png" alt="check index" class="img-index index2">
                 </div>
-                <div class="index" data-index="3">
+                <div class="index index3" data-index="3">
                     <img src="x.png" alt="check index" class="img-index index3">
                 </div>
-                <div class="index" data-index="4">
+                <div class="index index4" data-index="4">
                     <img src="x.png" alt="check index" class="img-index index4">
                 </div>
-                <div class="index" data-index="5">
+                <div class="index index5" data-index="5">
                     <img src="x.png" alt="check index" class="img-index index5">
                 </div>
-                <div class="index" data-index="6">
+                <div class="index index6" data-index="6">
                     <img src="x.png" alt="check index" class="img-index index6">
                 </div>
-                <div class="index" data-index="7">
+                <div class="index index7" data-index="7">
                     <img src="x.png" alt="check index" class="img-index index7">
                 </div>
-                <div class="index" data-index="8">
+                <div class="index index8" data-index="8">
                     <img src="x.png" alt="check index" class="img-index index8">
                 </div>
             </div>
             <div class="displayGame">
-                <div id="startGame">Start Game</div>
+                <div id="startGame">Play Again</div>
                 <div id="reset">
                     <img src="reset.png" alt="reset">
                 </div>
@@ -78,12 +78,47 @@
             <aside class="aside">
                 <input type="text" value="Player 2" id="player2">
                 <div class="container-mark">
-                    <img src="o.png" alt="x">
+                    <img src="o.png" alt="x" class="player2-img-mark">
                 </div>
                 <h3 class="score">Score</h3>
                 <span class="score-spanO">0</span>
             </aside>
         </div>
+        <dialog class="modal">
+            <form>
+            <div class="aside-modal">
+                <input class="player-one-input" type="text" value="Player 1">
+                <div class="container-mark container-playerOne">
+                    <input type="radio" name="player1-mark" id="player1-x" class="inputMark" checked value="player1-X">
+                    <label for="player1-x" class="mark-label active" >X</label>
+                    <input type="radio" name="player1-mark" id="player1-o" class="inputMark" value="player1-O">
+                    <label for="player1-o" class="mark-label">O</label>
+                </div>
+                </div>
+            </div>
+
+            <div class="player-bot">
+                <input type="radio" name="player-bot" id="player" class="mode-input" value="player">
+                <label for="player" class="player-bot-label">Player</label>
+                <input type="radio" name="player-bot" id="bot" class="mode-input" checked value="bot"  >
+                <label for="bot" class="player-bot-label">Bot</label>
+            </div>
+
+            <div class="aside-modal">
+
+                <input class="player-two-input" type="text" value="BOT">
+                <div class="container-mark container-playerTwo">
+                    <input type="radio" name="player2-mark" id="player2-x" class="inputMark" value="player2-X">
+                    <label for="player2-x" class="mark-label">X</label>
+                    <input type="radio" name="player2-mark" id="player2-o" class="inputMark" checked value="player2-O">
+                    <label for="player2-o" class="mark-label active">O</label>
+                </div>
+            </div>
+            <div class="container-submit">
+                <button type="submit" id="continue">Continue</button>
+            </div>
+        </form>
+        </dialog>
     <script src="script.js"></script>
 </body>
 </html>

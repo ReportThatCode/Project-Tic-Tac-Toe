@@ -1,232 +1,270 @@
+modal = document.querySelector(".modal");
+modal.showModal()
 
+// Módulo para manejar el tablero del juego
+const Gameboard = (() => {
+    const table = Array(9).fill(null);
+    const reset = () => {
+        table.fill(null);
+        DisplayController.updateBoard();
+        DisplayController.clearCell();
+    };
 
-const gameBoard = (function(){
- 
-    let isPlaying = false;
-    let mode = 2;
-    let table = ["null","null","null","null","null","null","null","null","null"];
-
-    const startGame = ()=>{ gameBoard.isPlaying = true; document.querySelector("#startGame").classList.add("active");}
+    const setMark = (index, mark) => {
+        if (table[index] === null) {
+            table[index] = mark;
+            return true;
+        }
+        return false;
+    };
     
-    const resetGame = ()=>{
-        displayController.resetTurn();
-        document.querySelector(".comments").textContent = "Mode game:"
-        document.querySelectorAll(".img-index").forEach(el => el.classList.remove("checked"));
-        gameBoard.table = ["null","null","null","null","null","null","null","null","null"];
-        gameBoard.isPlaying = true;
-        document.querySelector("#reset").classList.add("active")
-        setTimeout(()=>{
-            document.querySelector("#reset").classList.remove("active") 
-        },300)}
+    const getMark = (index) => table[index];
 
-    const stopGame = () => gameBoard.isPlaying = false
-    
-    const modeTwoPlayers = () => gameBoard.mode = 2
-    
-    const modeBot = ()=> gameBoard.mode = 1
+    const getBoard = () => [...table];
 
-    return {
-        table,
-        startGame,
-        reset: resetGame,
-        stopGame,
-        isPlaying,
-        mode,
-        modeTwoPlayers,
-        modeBot
-    }
+    return { reset, setMark, getMark, getBoard };
 })();
 
-const displayController = (function(){
-
-    let playersTurn = ["PlayerX","PlayerO"];
-    let turn = 0;
-    const combinacionesGanadoras = [[0, 1, 2],[3, 4, 5],[6, 7, 8],[0, 3, 6],[1, 4, 7],[2, 5, 8],[0, 4, 8],[2, 4, 6]];
-    
-    const resetTurn = ()=> displayController.turn = 0
-
-    const showWinner = (mark)=>{
-        gameBoard.stopGame();
-        document.querySelector(".comments").innerHTML = `El ganador es:  <span class="span-mark">${mark}</span>`;
-        displayController.increaseScore(mark)
-
-    }  
-    const increaseScore = (mark)=>{
-        if(mark === "x"){
-            playerX.increanse();
-            document.querySelector(".score-spanX").textContent = playerX.getscore();
-        }
-        else if(mark === "o"){
-            playerO.increanse();
-            document.querySelector(".score-spanO").textContent = playerO.getscore();
-        }
-    }
-    const isWinner = (mark)=>{   
-       let hasWinner = false;
-       combinacionesGanadoras.forEach(table => {
-            if(gameBoard.table[table[0]] === mark && gameBoard.table[table[1]] === mark && gameBoard.table[table[2]] === mark ){
-                return hasWinner = true;
-            }})
-        return hasWinner
-    }
-
-    const showTable = ()=>{
-        console.log(gameBoard.table[0],gameBoard.table[1],gameBoard.table[2])
-        console.log(gameBoard.table[3],gameBoard.table[4],gameBoard.table[5])
-        console.log(gameBoard.table[6],gameBoard.table[7],gameBoard.table[8])
-    }
-
-    const getTurn = ()=> playersTurn[turn];
-
-    const finishTurn = ()=> turn = (turn + 1) % playersTurn.length;
-
-    const markIndex = (index,mark) => gameBoard.table[index] = mark
-
-    const getIndex = (mark)=>{
-        let index;
-        if(mark === "o" && gameBoard.mode === 1){
-              index = numberAleatorio();
-              console.log("Esta jugando IA");
-              return index
-        } 
-        else {
-            index = prompIndex(`Turno de ${mark}, Elija una casilla`);
-            return index
-        }}
-
-    const indexIsDisabled = (index)=> gameBoard.table[index] !== "null" ? false : true
-    
-    const numberAleatorio = ()=> {
-        let index = Math.floor(Math.random() * 9);
-        if(!indexIsDisabled(index)){
-            return numberAleatorio()
-        }  return index; }
-
-
-    const movePlayer = ()=>{
-        const move = getTurn();
-        if(move === "PlayerX"){ playerX.moveTable();}
-        else if(move === "PlayerO") { playerO.moveTable();}
-    }
-
-    const markDOOM = (index,mark)=> {
-        document.querySelector(`.index${index}`).src = `${mark}.png`
-        document.querySelector(`.index${index}`).classList.add("checked")
-    } 
-    const moveBot = ()=>{
-    let indexBot = numberAleatorio();
-    displayController.markIndex(indexBot,"o");
-    displayController.markDOOM(indexBot,"o")
-    const isWinner = displayController.isWinner("o")
-    displayController.finishTurn();
-    if(isWinner === true) return displayController.showWinner("o"); 
-    }
-
-    return {
-        isWinner,
-        markIndex,
-        indexIsDisabled,
-        showTable,
-        getTurn,
-        finishTurn,
-        movePlayer,
-        numberAleatorio,
-        getIndex,
-        showWinner,
-        markDOOM,
-        increaseScore,
-        moveBot,
-        resetTurn
-    }
-
-}())
-
-
-const player = (player,mark)=>{
+// Factory para crear jugadores
+const Player = (name, mark) => {
     let score = 0;
-    let name = player;
 
-    const increanse = ()=> score += 1;
-    const getscore = ()=> score;
-    const setName = (newName)=> name = newName; 
-    const getName = ()=> name;
-    const moveTable = (index)=>{       
+    const getName = () => name;
+    const getMark = () => mark;
+    const addScore = () => { score += 1; };
+    const getScore = () => score;
 
-        let indexParse = parseInt(index)
+    return { getName, getMark, addScore, getScore };
+};
 
-        if (gameBoard.isPlaying === false) return     
-        else if (gameBoard.mode === 1){
-            console.log("MODO PLAYER VS BOT")
-            // move player
-            isValidIndex = displayController.indexIsDisabled(indexParse);
-            if(isValidIndex){
-                console.log("vs ia")
-                displayController.markIndex(indexParse,mark);
-                displayController.markDOOM(indexParse,mark)
-                const isWinner = displayController.isWinner(mark)
-                if(isWinner === true) return displayController.showWinner(mark); 
-                displayController.finishTurn()
-                return displayController.moveBot(indexParse);
-            }else {return alert("INDICE YA EN USO, ELIJA OTRO")}     
-            }
-            else {
-                console.log("MODO TWO PLAYERS")
-                isValidIndex = displayController.indexIsDisabled(indexParse);
-                if(isValidIndex){
-                    displayController.markIndex(indexParse,mark);
-                    displayController.markDOOM(indexParse,mark)
-                    const isWinner = displayController.isWinner(mark)
-                    if(isWinner === true) return displayController.showWinner(mark); 
-                    return displayController.finishTurn()
-                }
-                else {return alert("INDICE YA EN USO, ELIJA OTRO")}
-            }
-        }
-        return {increanse,getscore,setName,getName,moveTable}
-}
-
-const playerX = player("Player1","x");
-const playerO = player("Player2","o");
-
-const doomHandler = (function(){
-
-    const selectMode = (mode)=>{
-        if(mode === "TwoPlayers"){
-            gameBoard.modeTwoPlayers();
-            gameBoard.reset();
-        }
-        else if(mode === "Bot"){ 
-            gameBoard.modeBot()
-            gameBoard.reset();
-        }
-        }
-
-
-    const botIA = ()=>{ document.getElementById("player2").value = "BOT IA"}
+// Módulo para manejar el flujo del juego
+const GameController = (() => {
     
-    const removeActive = ()=>{ return document.querySelectorAll(".mode").forEach(el => el.classList.remove("active"))}
+    // [Player("Player 1", "X"), Player("Player 2", "O")];
+    let players = []
+    let currentPlayerIndex = 0;
+    let isPlaying = false;
+    let mode = "player";
+    const winningCombinations = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8],
+        [0, 3, 6], [1, 4, 7], [2, 5, 8],
+        [0, 4, 8], [2, 4, 6]
+    ];
     
-    return { selectMode, removeActive,botIA }
+    const whoStart =()=>{
+       const is = players[0].getMark();
+       if(is !== "X"){
+        currentPlayerIndex = 1;
+        return true;
+       }
+    }
+
+    const setMode = (input)=> mode = input
+    const getMode = ()=> mode
+    const setPlayers = (playerOne,playerTwo)=> players = [Player(playerOne[1],playerOne[0]),Player(playerTwo[1],playerTwo[0])];
+    
+    const getPlayers = ()=> [players[0].getScore(),players[1].getScore()];
+
+    const currentTurn = () => players[currentPlayerIndex];
+    
+    const startGame = () => {
+        isPlaying = true;
+        Gameboard.reset();
+        currentPlayerIndex = 0;
+        whoStart();
+        if(isTurnBot()) moveBot(); 
+        DisplayController.updateBoard();
+        DisplayController.showMessage(`${players[currentPlayerIndex].getName()}'s turn!`);
+        DisplayController.startBtn();
+    };
+
+    const isTurnBot = ()=> getMode() === "bot" && players[1] === currentTurn() ? true : false;
+
+    const moveBot = ()=>{
+        const index = indexBot();  
+        if (checkWinner(players[currentPlayerIndex].getMark())) {
+            isPlaying = false;
+            players[currentPlayerIndex].addScore();
+            DisplayController.showMessage(`${players[currentPlayerIndex].getName()} wins!`);
+            DisplayController.updateScores();
+            DisplayController.updateBoard();
+            DisplayController.endBtn();
+            return;
+        }
+        
+        if (Gameboard.getBoard().every(cell => cell !== null)) {
+            isPlaying = false;
+            DisplayController.showMessage("It's a tie!");
+            DisplayController.updateBoard();
+            DisplayController.endBtn();
+            return;
+        }
+
+        currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
+        DisplayController.showMessage(`${players[currentPlayerIndex].getName()}'s turn!`);
+        DisplayController.updateBoard();
+    }
+
+    const indexBot = ()=>{
+        let randomNumber;
+        do {
+            randomNumber = Math.floor(Math.random() * 9);
+
+        } while (!Gameboard.setMark(randomNumber,players[1].getMark()))
+            return randomNumber
+        }
+
+    const playTurn = (index) => {
+        if (!isPlaying || !Gameboard.setMark(index, players[currentPlayerIndex].getMark())) return
+        if (checkWinner(players[currentPlayerIndex].getMark())) {
+            isPlaying = false;
+            players[currentPlayerIndex].addScore();
+            DisplayController.showMessage(`${players[currentPlayerIndex].getName()} wins!`);
+            DisplayController.updateScores();
+            DisplayController.updateBoard();
+            DisplayController.endBtn();
+            return;
+        }
+        
+        if (Gameboard.getBoard().every(cell => cell !== null)) {
+            isPlaying = false;
+            DisplayController.showMessage("It's a tie!");
+            DisplayController.updateBoard();
+            DisplayController.endBtn();
+            return;
+        }
+
+        currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
+        DisplayController.showMessage(`${players[currentPlayerIndex].getName()}'s turn!`);
+        DisplayController.updateBoard();
+        if(isTurnBot()) moveBot(); 
+    };
+
+    const checkWinner = (mark) => {
+        return winningCombinations.some(combination =>
+            combination.every(index => Gameboard.getMark(index) === mark)
+        );
+    };
+
+    return { startGame, playTurn, currentTurn, getPlayers, setPlayers, setMode};
+})();
+
+// Módulo para manejar la lógica del DOM
+const DisplayController = (() => {
+    const cells = document.querySelectorAll(".index");
+    const messageElement = document.querySelector(".comments");
+    const scores = {
+        X: document.querySelector(".score-spanX"),
+        O: document.querySelector(".score-spanO")
+    };
+
+    cells.forEach((cell, index) => {
+        cell.addEventListener("click", () => {
+            GameController.playTurn(index);
+        });
+    });
+
+    const updateBoard = () => {
+        const board = Gameboard.getBoard();
+        cells.forEach((cell, index) => {
+            if(board[index] === "X"){ paintCell(cell.dataset.index,"x") }
+            if(board[index] === "O"){ paintCell(cell.dataset.index,"o") }
+        });
+    };
+
+    const paintCell = (index, mark)=>{
+        document.querySelector(`.index${index} img`).classList.add("checked");
+        document.querySelector(`.index${index} img`).src = `${mark.toLowerCase()}.png`
+    }
+    const clearCell = ()=>{
+        cells.forEach(cell => {
+            cell.querySelector("img").src = "";
+            cell.querySelector("img").classList.remove("checked")
+        })
+    }
+    const showMessage = (message) =>  messageElement.textContent = message;
+
+    const updateScores = () => {
+        const players = GameController.getPlayers();
+        scores.X.textContent = players[0];
+        scores.O.textContent = players[1];
+    };
+
+    const startBtn = ()=> document.querySelector("#startGame").classList.add("active");
+    const endBtn = ()=> document.querySelector("#startGame").classList.remove("active")  
+    
+    return { updateBoard, showMessage, updateScores , clearCell, startBtn, endBtn};
 })();
 
 
-document.addEventListener("click",(e)=>{
-    const mode = e.target.closest(".mode")
-    const index = e.target.closest(".index")
+const modalForm = (()=>{
 
-    if(mode){
-        doomHandler.removeActive()
-        mode.classList.add("active");
-        doomHandler.selectMode(mode.dataset.mode);
+    const getDataForm = (container,input)=>{
+        const player = document.querySelectorAll(`${container} .inputMark`)
+        const checkPlayer = [...player].filter(el => el.checked);
+        return  [checkPlayer[0].value.slice(-1), document.querySelector(input).value]
     }
 
-    if(index){
-        let turn = displayController.getTurn();
-        if(turn === "PlayerX"){ playerX.moveTable(index.dataset.index);}
-        else if(turn === "PlayerO" && gameBoard.mode === 2){ playerO.moveTable(index.dataset.index);}
+    const dataForm = (playerOne,playerTwo)=> GameController.setPlayers(playerOne,playerTwo)
+
+    const updateDOM = (playerOne, playerTwo, mode)=>{
+        //PLAYER ONE
+        document.querySelector("#player1").value = playerOne[1];
+        document.querySelector(".player1-img-mark").src = `${playerOne[0].toLowerCase()}.png`
+
+         //PLAYER TWO
+         document.querySelector("#player2").value = playerTwo[1];
+         document.querySelector(".player2-img-mark").src = `${playerTwo[0].toLowerCase()}.png`
+    
+         //Clear mode btn active
+         document.querySelectorAll(".mode").forEach(el => el.classList.remove("active"))
+         if(mode === "player") document.querySelector(".mode-player").classList.add("active")
+         if(mode === "bot") document.querySelector(".mode-bot").classList.add("active")   
+     
+        }
+
+    const changeMark = (target)=>{
+        // PLAYER1 => X || PLAYER2 => 0
+        if(target.id === "player1-x") document.querySelector("#player2-o").checked = true
+        // PLAYER1 => O || PLAYER2 => X
+        if(target.id === "player1-o") document.querySelector("#player2-x").checked = true
+        // PLAYER2 => X || PLAYER1 => 0
+        if(target.id === "player2-x") document.querySelector("#player1-o").checked = true
+        // PLAYER2 => O || PLAYER2 => X
+        if(target.id === "player2-o") document.querySelector("#player1-x").checked = true
     }
+    return { changeMark, dataForm, updateDOM, getDataForm}
 
-    if(e.target.matches("#startGame")){ gameBoard.startGame()}
+})();
 
-    if(e.target.closest("#reset")){gameBoard.reset()}
+// Inicializar el juego
+document.querySelector("#startGame").addEventListener("click", () => {GameController.startGame()});
+
+document.querySelector("#reset").addEventListener("click", () => {modal.showModal()});
+
+document.addEventListener("change",(e)=>{
+    if(e.target.matches(".inputMark")) modalForm.changeMark(e.target);
+
+    if(e.target.matches(".mode-input")){
+        if(e.target.id === "player") {return document.querySelector(".player-two-input").value = "Player Two"}
+        if(e.target.id === "bot") {return document.querySelector(".player-two-input").value = "Bot"}
+    }
+})
+
+document.addEventListener("submit",(e)=>{
+    e.preventDefault()
+
+    const modeGame = [...document.querySelectorAll(".mode-input")].filter(el => el.checked);
+    const playerOne = modalForm.getDataForm(".container-playerOne",".player-one-input");
+    const playerTwo = modalForm.getDataForm(".container-playerTwo",".player-two-input"); 
+
+    modalForm.updateDOM(playerOne,playerTwo,modeGame[0].value);
+    modalForm.dataForm(playerOne,playerTwo)
+
+    GameController.setMode(modeGame[0].value)
+    
+    modal.close();
+    GameController.startGame();
+    DisplayController.startBtn();
+
 })

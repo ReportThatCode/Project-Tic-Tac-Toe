@@ -12,7 +12,7 @@
 body {
     max-height: 100vh;
     font-family: var(--font-second);
-      
+    
       
 }
 
@@ -117,7 +117,7 @@ padding-top: 1rem;
     flex-direction: column;
     align-items: center;
 }
-.aside input {
+.aside input[type="text"] {
     appearance: none;
     border: none;
     border-bottom: solid 3px black;
@@ -200,4 +200,118 @@ padding-top: 1rem;
 #reset img {
     width: 100%;
     height: 100%;
+}
+    
+.modal {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    width: 700px;
+}
+form {
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    grid-template-rows: 100px 1fr 150px;
+    height: auto;
+}
+.container-submit {
+    grid-column: 1/3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+#continue {
+    margin: 0 auto;
+    text-align: center;
+    padding: 1.2rem 4rem;
+    cursor: pointer;
+    background-color: black;
+    color: white;
+    border: solid 2px black;
+    outline: none;
+    font-family: var(--font-second);
+    font-size: 1.2rem;
+}
+
+.aside-modal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+}
+
+.aside-modal input[type="text"] {
+    appearance: none;
+    border: none;
+    border-bottom: solid 3px black;
+    padding: 0.2rem;
+    font-size: 2rem;
+    font-family: var(--font-second);
+    max-width: 200px;
+    text-align: center;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.aside-modal input[type="text"]:focus {
+    outline: none;
+}
+.aside-modal:first-child {
+    grid-row: 2/3;
+}
+.player-bot {
+    grid-column: 2/3;
+    display: flex;
+    margin: 0 auto;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;
+    margin-top: 20px;
+}
+
+.player-bot-label {
+    padding: 1rem 2rem;
+    background-color: white;
+    color: black;
+    cursor: pointer;
+    font-size: 1.1rem;
+    border: solid 2px black;
+    font-family: var(--font-main);
+
+}
+
+.player-bot input {
+    display: none;
+}
+
+.container-mark {
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container-mark input {
+    display: none;
+}
+
+.container-mark .mark-label {
+    padding: 1rem 2.5rem;
+    border: solid 2px black;
+    font-size: 2rem;
+    font-family: var(--font-main);
+    cursor: pointer;
+}
+
+/*~*/
+.container-mark .inputMark:checked + .mark-label {
+    background-color: black;
+    color: white;
+}
+
+.mode-input:checked + .player-bot-label {
+    background-color: black;
+    color: white;
 }
