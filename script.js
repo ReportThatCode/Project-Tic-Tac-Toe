@@ -1,5 +1,4 @@
-modal = document.querySelector(".modal");
-modal.showModal()
+
 
 // Módulo para manejar el tablero del juego
 const Gameboard = (() => {
@@ -72,7 +71,7 @@ const GameController = (() => {
         Gameboard.reset();
         currentPlayerIndex = 0;
         whoStart();
-        if(isTurnBot()) moveBot(); 
+        if(isTurnBot()) setTimeout(()=> moveBot(),300)
         DisplayController.updateBoard();
         DisplayController.showMessage(`${players[currentPlayerIndex].getName()}'s turn!`);
         DisplayController.startBtn();
@@ -137,7 +136,7 @@ const GameController = (() => {
         currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
         DisplayController.showMessage(`${players[currentPlayerIndex].getName()}'s turn!`);
         DisplayController.updateBoard();
-        if(isTurnBot()) moveBot(); 
+        if(isTurnBot()) setTimeout(()=> moveBot(),300)
     };
 
     const checkWinner = (mark) => {
@@ -151,6 +150,8 @@ const GameController = (() => {
 
 // Módulo para manejar la lógica del DOM
 const DisplayController = (() => {
+    const modal = document.querySelector(".modal");
+    const overlay = document.querySelector(".overlay");
     const cells = document.querySelectorAll(".index");
     const messageElement = document.querySelector(".comments");
     const scores = {
@@ -190,10 +191,19 @@ const DisplayController = (() => {
         scores.O.textContent = players[1];
     };
 
+    const modalOpen =()=>{
+        modal.showModal()
+        overlay.classList.add("active")
+    }
+    const modalClose = ()=>{
+        modal.close();
+        overlay.classList.remove("active")
+    }
+
     const startBtn = ()=> document.querySelector("#startGame").classList.add("active");
     const endBtn = ()=> document.querySelector("#startGame").classList.remove("active")  
     
-    return { updateBoard, showMessage, updateScores , clearCell, startBtn, endBtn};
+    return { updateBoard, showMessage, updateScores , clearCell, startBtn, endBtn, modalOpen, modalClose };
 })();
 
 
@@ -208,6 +218,7 @@ const modalForm = (()=>{
     const dataForm = (playerOne,playerTwo)=> GameController.setPlayers(playerOne,playerTwo)
 
     const updateDOM = (playerOne, playerTwo, mode)=>{
+
         //PLAYER ONE
         document.querySelector("#player1").value = playerOne[1];
         document.querySelector(".player1-img-mark").src = `${playerOne[0].toLowerCase()}.png`
@@ -220,7 +231,6 @@ const modalForm = (()=>{
          document.querySelectorAll(".mode").forEach(el => el.classList.remove("active"))
          if(mode === "player") document.querySelector(".mode-player").classList.add("active")
          if(mode === "bot") document.querySelector(".mode-bot").classList.add("active")   
-     
         }
 
     const changeMark = (target)=>{
@@ -240,7 +250,7 @@ const modalForm = (()=>{
 // Inicializar el juego
 document.querySelector("#startGame").addEventListener("click", () => {GameController.startGame()});
 
-document.querySelector("#reset").addEventListener("click", () => {modal.showModal()});
+document.querySelector("#reset").addEventListener("click", () => {DisplayController.modalOpen();});
 
 document.addEventListener("change",(e)=>{
     if(e.target.matches(".inputMark")) modalForm.changeMark(e.target);
@@ -262,9 +272,16 @@ document.addEventListener("submit",(e)=>{
     modalForm.dataForm(playerOne,playerTwo)
 
     GameController.setMode(modeGame[0].value)
-    
-    modal.close();
+    DisplayController.modalClose()
     GameController.startGame();
+    DisplayController.updateScores();
     DisplayController.startBtn();
-
 })
+
+document.addEventListener("DOMContentLoaded",()=>{
+    DisplayController.modalOpen();
+})
+
+// Agregar reset score
+// agregar time out al movebot
+// overlay modal    
